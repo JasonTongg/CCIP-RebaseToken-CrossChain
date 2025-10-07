@@ -147,10 +147,10 @@ contract RebaseTokenTest is Test {
         vm.deal(user, amount);
         vm.prank(user);
         vault.deposit{value: amount}();
-        assertEq(rebaseToken.principleBalanceOf(user), amount);
+        assertEq(rebaseToken.principalBalanceOf(user), amount);
 
         vm.warp(1 hours);
-        assertEq(rebaseToken.principleBalanceOf(user), amount);
+        assertEq(rebaseToken.principalBalanceOf(user), amount);
     }
 
     function testGetRebaseTokenAddress() public {
