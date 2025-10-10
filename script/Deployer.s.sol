@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Script} from "forge-std/Script.sol";
+import {Script, console2} from "forge-std/Script.sol";
 import {Vault} from "../src/Vault.sol";
 import {IRebaseToken} from "../src/interfaces/IRebaseToken.sol";
 import {RebaseToken} from "../src/RebaseToken.sol";
@@ -12,17 +12,25 @@ import {RegistryModuleOwnerCustom} from "@ccip/contracts/src/v0.8/ccip/tokenAdmi
 import {TokenAdminRegistry} from "@ccip/contracts/src/v0.8/ccip/tokenAdminRegistry/TokenAdminRegistry.sol";
 
 contract TokenAndPoolDeployer is Script{
-    function run() public returns (RebaseToken token, RebaseTokenPool pool) {
+    function run(address _rmnProxy, address _router, address _registryModuleOwner, address _tokenAdminRegistry) public returns (RebaseToken token, RebaseTokenPool pool) {
         CCIPLocalSimulatorFork ccipLocalSimulatorFork = new CCIPLocalSimulatorFork();
         Register.NetworkDetails memory networkDetails = ccipLocalSimulatorFork.getNetworkDetails(block.chainid);
 
+        address rmnProxyAddress = _rmnProxy != address(0) ? _rmnProxy : networkDetails.rmnProxyAddress;
+        address routerAddress   = _router != address(0) ? _router : networkDetails.routerAddress;
+        address registryModuleOwnerCustomAddress = _registryModuleOwner != address(0) ? _registryModuleOwner : networkDetails.registryModuleOwnerCustomAddress; 
+        address tokenAdminRegistryAddress = _tokenAdminRegistry != address(0) ? _tokenAdminRegistry : networkDetails.tokenAdminRegistryAddress; 
+
+        console2.log(rmnProxyAddress);
+        console2.log(routerAddress);
+
         vm.startBroadcast();
         token = new RebaseToken();
-        pool = new RebaseTokenPool(IERC20(address(token)), new address[](0), networkDetails.rmnProxyAddress, networkDetails.routerAddress);
+        pool = new RebaseTokenPool(IERC20(address(token)), new address[](0), rmnProxyAddress, routerAddress);
         token.grantMintAndBurnRole(address(pool));
-        RegistryModuleOwnerCustom(networkDetails.registryModuleOwnerCustomAddress).registerAdminViaOwner(address(token));
-        TokenAdminRegistry(networkDetails.tokenAdminRegistryAddress).acceptAdminRole(address(token));
-        TokenAdminRegistry(networkDetails.tokenAdminRegistryAddress).setPool(address(token),address(pool));
+        RegistryModuleOwnerCustom(registryModuleOwnerCustomAddress).registerAdminViaOwner(address(token));
+        TokenAdminRegistry(tokenAdminRegistryAddress).acceptAdminRole(address(token));
+        TokenAdminRegistry(tokenAdminRegistryAddress).setPool(address(token),address(pool));
         vm.stopBroadcast();
     }
 }
