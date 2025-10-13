@@ -8,16 +8,16 @@ Modern DeFi often requires assets to move across multiple chains (L1, L2, sidech
 
 This repository aims to implement a rebase token that:
 
-- Accrues yield / interest over time (via rebasing)  
-- Can be bridged across chains while preserving correct balances / shares  
-- Integrates with Chainlink’s CCIP for secure cross-chain messaging and token transfer  
+- Accrues yield / interest over time (via rebasing)
+- Can be bridged across chains while preserving correct balances / shares
+- Integrates with Chainlink’s CCIP for secure cross-chain messaging and token transfer
 
 ## Key Concepts
 
 ### Rebase Token
 
-A *rebase token* is one whose total supply may change (increase or decrease) periodically (or continuously) to reflect a target metric (e.g. interest, yield). Each holder’s balance scales proportionally.  
-Because the supply changes, internal accounting often uses *shares* or *internal units* rather than raw token amounts. (See “rebasing tokens with CCIP” in Chainlink docs)
+A _rebase token_ is one whose total supply may change (increase or decrease) periodically (or continuously) to reflect a target metric (e.g. interest, yield). Each holder’s balance scales proportionally.  
+Because the supply changes, internal accounting often uses _shares_ or _internal units_ rather than raw token amounts. (See “rebasing tokens with CCIP” in Chainlink docs)
 
 ### CCIP / Cross-Chain Bridge
 
@@ -46,54 +46,62 @@ Here is a high-level view of how the repo is organized:
 
 ---
 
-- **RebaseToken.sol** — Implementation of the rebase token (Accrues yield, etc.)  
-- **RebaseTokenPool.sol** — A custom CCIP-compatible token pool that implements locking, burning, minting, releasing across chains (with rebase logic)  
-- **Vault.sol** — Contracts that interact with RebaseToken to let user depodit and redeem token  
-- **Scripts** — helper scripts to deploy, configure, or bridge  
-- **Tests** — unit tests and possibly forking / simulated cross-chain bridging  
+- **RebaseToken.sol** — Implementation of the rebase token (Accrues yield, etc.)
+- **RebaseTokenPool.sol** — A custom CCIP-compatible token pool that implements locking, burning, minting, releasing across chains (with rebase logic)
+- **Vault.sol** — Contracts that interact with RebaseToken to let user depodit and redeem token
+- **Scripts** — helper scripts to deploy, configure, or bridge
+- **Tests** — unit tests and possibly forking / simulated cross-chain bridging
 
 ## Libraries & Tooling
 
 This project uses:
 
 - **Foundry**
+
   > Smart contract development framework (includes `forge`, `cast`, `anvil`)
-  
+
   Used for:
+
   - Compiling contracts (`forge build`)
   - Running tests (`forge test`)
   - Deploying & scripting (`forge script`)
   - Local chain simulation (`anvil`)
-    
+
 - **Chainlink CCIP Contracts / Interfaces**
+
   > To interact with Chainlink’s cross-chain infrastructure.
 
   Used for:
-  - Sending and receiving messages between chains  
-  - Locking / minting tokens via CCIP Routers  
+
+  - Sending and receiving messages between chains
+  - Locking / minting tokens via CCIP Routers
   - Integrating **Token Pools** for custom token behaviors (like rebasing)
-  
+
 - **OpenZeppelin** - for secure, standardized ERC-20 and access control implementations.
+
   > For secure, standardized ERC-20, math, and access control implementations.
 
   Used for:
-  - `ERC20` and related extensions (base token functionality)  
-  - `Ownable` / `AccessControl` for permissioned operations (like rebasing or bridging)  
-    
+
+  - `ERC20` and related extensions (base token functionality)
+  - `Ownable` / `AccessControl` for permissioned operations (like rebasing or bridging)
+
 - **Chainlink Local**
+
   > For simulating CCIP behavior locally during development.
-  
+
   Used for:
-  - Running mock CCIP Routers, Token Pools, and LINK tokens  
-  - Testing cross-chain message flow without requiring real Chainlink nodes  
+
+  - Running mock CCIP Routers, Token Pools, and LINK tokens
+  - Testing cross-chain message flow without requiring real Chainlink nodes
   - Validating logic before deploying to testnets (e.g. Sepolia)
 
 ## How It Works (Bridge Flow)
 
-1. **User initiates a bridge** via a `sendCrossChain` or similar function  
-2. The **RebaseTokenPool** calls CCIP’s Router to send tokens and data to the target chain  
-3. CCIP locks or burns tokens on the source chain and transfers message data  
-4. On the destination chain, the **RebaseTokenPool** mints or releases tokens  
+1. **User initiates a bridge** via a `sendCrossChain` or similar function
+2. The **RebaseTokenPool** calls CCIP’s Router to send tokens and data to the target chain
+3. CCIP locks or burns tokens on the source chain and transfers message data
+4. On the destination chain, the **RebaseTokenPool** mints or releases tokens
 5. Rebase mechanics are recalculated, ensuring consistent supply ratios across chains
 
 The end result: users can seamlessly move rebase tokens between EVM-compatible networks while preserving yield and balance integrity.
@@ -101,8 +109,8 @@ The end result: users can seamlessly move rebase tokens between EVM-compatible n
 ## Author
 
 **Jason Tong**  
-*Blockchain Developer | Smart Contract Engineer*
+_Blockchain Developer | Smart Contract Engineer_
 
-- 🔗 **GitHub:** [JasonTongg](https://github.com/JasonTongg)  
-- 💼 **LinkedIn:** [Jason Tong](https://www.linkedin.com/in/jason-tong-42600319a/)  
-- 🧠 **Focus:** Solidity · Foundry · EVM · Smart Contracts · Blockchain · Web3
+- **GitHub:** [JasonTongg](https://github.com/JasonTongg)
+- **LinkedIn:** [Jason Tong](https://www.linkedin.com/in/jason-tong-42600319a/)
+- **Focus:** Solidity · Foundry · EVM · Smart Contracts · Blockchain · Web3
