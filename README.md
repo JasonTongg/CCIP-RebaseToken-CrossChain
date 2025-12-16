@@ -2,6 +2,9 @@
 
 A cross-chain rebase token implementation using Chainlink’s **CCIP (Cross-Chain Interoperability Protocol)**. This repo demonstrates how to build a rebase (interest-accruing / elastic supply) token that can be bridged across EVM chains using CCIP.
 
+- The live version is available at: [https://ccip-crosschain.vercel.app/](https://ccip-crosschain.vercel.app/).
+- Frontend using Nextjs: [CCIP Rebase Token Frontend](https://github.com/JasonTongg/CCIP-Crosschain-Frontend).
+
 ## Motivation & Overview
 
 Modern DeFi often requires assets to move across multiple chains (L1, L2, sidechains) while preserving their economic properties. Rebase tokens introduce complexity (because supply changes over time), and bridging them naively can break invariants or cause loss of value.
