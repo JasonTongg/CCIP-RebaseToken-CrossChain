@@ -1,3 +1,5 @@
+<img width="1038" height="532" alt="image" src="https://github.com/user-attachments/assets/0662fdad-f1e7-47c2-9689-846aab9ccce9" />
+
 # CCIP-RebaseToken-CrossChain
 
 A cross-chain rebase token implementation using Chainlink’s **CCIP (Cross-Chain Interoperability Protocol)**. This repo demonstrates how to build a rebase (interest-accruing / elastic supply) token that can be bridged across EVM chains using CCIP.
